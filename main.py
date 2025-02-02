@@ -50,5 +50,5 @@ def convert_to_df(tail):
 
 
 if __name__ == '__main__':
-    pdf_path = "PhonePe_Statement_Jan2025_Feb2025.pdf"
+    pdf_path = "Input/PhonePe_Statement_Jan2025_Feb2025.pdf"
     head, tail = read_pdf(pdf_path)
