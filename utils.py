@@ -1,10 +1,12 @@
 import re
+from datetime import datetime
 
 def extract_transaction_details(text):
     # Extract the date (pattern: "Month DD, YYYY")
     date_pattern = r"\b([A-Za-z]{3} \d{2}, \d{4})\b"
     date_match = re.search(date_pattern, text)
     date = date_match.group(1) if date_match else None
+    date = datetime.strptime(date, "%b %d, %Y").date()
 
     # Extract the payment type (DEBIT/CREDIT)
     type_pattern = r"\b(DEBIT|CREDIT)\b"
@@ -25,7 +27,7 @@ def extract_transaction_details(text):
         "date": date,
         "name": name,
         "payment_type": payment_type,
-        "amount": f"₹{amount}" if amount else None,
+        "amount": float(amount.replace(',','')) if amount else None,
     }
 
 
@@ -34,6 +36,8 @@ def extract_time_and_transaction_id(text):
     time_pattern = r"\b(\d{1,2}:\d{2}\s?(?:am|pm))\b"
     time_match = re.search(time_pattern, text, re.IGNORECASE)
     time = time_match.group(1) if time_match else None
+    time = datetime.strptime(time, "%I:%M %p").time()
+
 
     # Extract transaction ID pattern (alphanumeric, typically long)
     transaction_pattern = r"Transaction ID (\w+)"
