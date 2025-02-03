@@ -17,7 +17,7 @@ def extract_transaction_details(text):
     amount = amount_match.group(1) if amount_match else None
 
     # Extract the person's name (words after "Paid to" and before payment type)
-    name_pattern = r"Paid to (.+?) (DEBIT|CREDIT)"
+    name_pattern = r"(?:Paid to|Payment to) (.+?) (DEBIT|CREDIT)"
     name_match = re.search(name_pattern, text)
     name = name_match.group(1).strip() if name_match else None
     

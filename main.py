@@ -4,16 +4,35 @@ from utils import *
 
 def read_pdf(pdf_path : str):
     records = []
+    months = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
             text = page.extract_text()
             lines = text.split("\n")
-
+ 
             for line in lines:
-                if not line.startswith('Page'):
+                curr = []
+                if not line.startswith(('Page','Date','This')):
                     records.append(line)
+                
+    return records[:1], records[2:]
 
-    return records[:2], records[3:]
+def process_trasaction_text(tail):
+    transactions = []
+    i = 0 
+    N = len(tail)
+    while i < N:
+        curr = []
+        while i < N and (not tail[i].startswith('Paid by')):
+            curr.append(tail[i])
+            i += 1
+        if i < N:    
+            curr.append(tail[i])
+        transactions.append(curr)
+        i += 1
+
+    return transactions
 
 def convert_to_df(tail):
     data = {
@@ -27,7 +46,7 @@ def convert_to_df(tail):
     "Account Number" : []
     }
 
-    transactions = [tail[i:i + 4] for i in range(0, len(tail), 4)]
+    transactions = process_trasaction_text(tail)
 
     for t in transactions:
         if len(t) == 4:
@@ -51,4 +70,8 @@ def convert_to_df(tail):
 
 if __name__ == '__main__':
     pdf_path = "Input/PhonePe_Statement_Jan2025_Feb2025.pdf"
+    output_path = "Output/PhonePe_Statement_Jan2025_Feb2025.xlsx"
     head, tail = read_pdf(pdf_path)
+    df = convert_to_df(tail)
+    df.to_excel(output_path, index=False)
+    print(df.info())
