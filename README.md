@@ -1,7 +1,7 @@
 
 # PhonePay Data Analysis
 
-Converts your PhonePay PDF statement into cleaned excel sheet for furthur analysis.
+Converts your PhonePay PDF statement into cleaned excel sheet for further analysis.
 
 
 ## Deployment
