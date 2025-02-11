@@ -3,9 +3,10 @@ from datetime import datetime
 
 def extract_transaction_details(text):
     # Extract the date (pattern: "Month DD, YYYY")
-    date_pattern = r"\b([A-Za-z]{3} \d{2}, \d{4})\b"
+    date_pattern = r"\b((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec) \d{2}, \d{4})\b"
     date_match = re.search(date_pattern, text)
     date = date_match.group(1) if date_match else None
+    date = date.replace("Sept", "Sep")
     date = datetime.strptime(date, "%b %d, %Y").date()
 
     # Extract the payment type (DEBIT/CREDIT)
